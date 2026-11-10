@@ -25,11 +25,27 @@ namespace D0lphin_Mod_Checker
             else
             {
                 menuCanvas.SetActive(isInMenu);
+                // If turning it back on, reposition it in front of the player's current view
+                if (isInMenu && Camera.main != null)
+                {
+                    menuCanvas.transform.position = Camera.main.transform.position + (Camera.main.transform.forward * 1.0f);
+                    menuCanvas.transform.rotation= Quaterion.LookRotation(menuCanvas.transform.position - Camera.main.transform.position);
+                }
             }
         }
 
         public void CreateWindow()
         {
+            // Fallback position if Camera.main is avalible
+            Vector3 spawnPosition = Vector.forward;
+            Quaternion spawnRotation = Quaternion.identity;
+
+            if (Camera.main != null)
+            {
+                spawnPosition = Camera.main.transform.position + (Camera.main.transform.forward * 1.0f);
+                spawnRotation = Quaternion.LookRotation(spawnPosition - Camera.main.transform.position);
+            }
+            
             //1. Create the root World-Space Canvas
             menuCanvas = new GameObject("D0lphinModMenu_Canvas");
             Canvas canvas = menuCanvas.AddComponent<Canvas>();
